@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Avançado CompTIA Security+</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .option-btn {
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .correct {
+            background-color: #10B981 !important; /* green-500 */
+            border-color: #059669 !important; /* green-600 */
+            color: white !important;
+        }
+        .incorrect {
+            background-color: #EF4444 !important; /* red-500 */
+            border-color: #DC2626 !important; /* red-600 */
+            color: white !important;
+        }
+        .explanation {
+            border-left: 4px solid #3B82F6; /* blue-500 */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="w-full max-w-2xl mx-auto">
+        
+        <!-- Tela de Seleção -->
+        <div id="home-screen">
+            <h1 class="text-3xl font-bold text-center text-white mb-2">Simulador CompTIA Security+</h1>
+            <p class="text-center text-gray-400 mb-8">Escolha um modo de estudo ou um domínio específico.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                 <button id="full-exam-btn" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg transition-colors text-left">
+                    <span class="font-bold text-lg">Modo Exame Completo</span>
+                    <span class="block text-sm text-blue-200 mt-1">25 perguntas | 30 minutos</span>
+                </button>
+                 <button id="history-btn" class="bg-teal-600 hover:bg-teal-700 text-white p-4 rounded-lg transition-colors text-left">
+                    <span class="font-bold text-lg">Histórico de Progresso</span>
+                    <span class="block text-sm text-teal-200 mt-1">Veja seus resultados</span>
+                </button>
+            </div>
+
+            <div id="domain-selection" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Botões de Domínio -->
+            </div>
+        </div>
+
+        <!-- Tela do Quiz -->
+        <div id="quiz-container" class="hidden">
+             <div class="flex justify-between items-center mb-4">
+                <p id="question-counter" class="text-sm text-gray-400">Pergunta 1 de X</p>
+                <div id="timer-display" class="hidden text-lg font-bold bg-gray-700 px-4 py-1 rounded-full">--:--</div>
+            </div>
+            <div id="progress-bar" class="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+                <div id="progress-bar-inner" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+            <div id="question-card" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 id="question-text" class="text-xl font-semibold mb-6"></h2>
+                <div id="options-container" class="space-y-3"></div>
+            </div>
+            <div id="feedback-container" class="hidden mt-4">
+                 <div id="explanation-card" class="bg-gray-800 p-4 rounded-lg explanation">
+                    <h3 class="font-bold text-lg mb-2 text-white">Explicação:</h3>
+                    <p id="explanation-text" class="text-gray-300"></p>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-between items-center">
+                <button id="back-to-home-btn" class="text-gray-400 hover:text-white transition-colors">&larr; Voltar ao Início</button>
+                <button id="submit-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Responder</button>
+            </div>
+        </div>
+
+        <!-- Tela de Resultados -->
+        <div id="results-container" class="hidden text-center bg-gray-800 p-8 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 text-white">Resultados</h2>
+            <p id="score-text" class="text-xl mb-6 text-gray-300"></p>
+            <p id="result-message" class="text-lg mb-8"></p>
+            <button id="restart-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">Voltar ao Início</button>
+        </div>
+        
+        <!-- Tela de Histórico -->
+        <div id="history-container" class="hidden bg-gray-800 p-8 rounded-lg shadow-lg">
+             <h2 class="text-3xl font-bold mb-6 text-white text-center">Histórico de Progresso</h2>
+             <div id="history-list" class="space-y-3">
+                 <!-- Histórico será inserido aqui -->
+             </div>
+             <div class="text-center mt-8">
+                <button id="back-from-history-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">Voltar ao Início</button>
+             </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- BANCO DE DADOS DE PERGUNTAS AMPLIADO ---
+        const questions = [
+            // Domínio 1
+            { domain: 1, question: "Uma organização implementou medidas para garantir que os dados não sejam alterados por pessoal não autorizado. Qual princípio da tríade CIA está sendo abordado?", options: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"], answer: "Integridade", explanation: "Integridade garante que os dados sejam precisos e confiáveis, protegendo-os contra modificações não autorizadas." },
+            { domain: 1, question: "Qual elemento é MAIS crucial em um plano de reversão (backout plan)?", options: ["Lista de stakeholders.", "Procedimentos para retornar ao estado anterior.", "Análise de impacto.", "Resultados dos testes."], answer: "Procedimentos para retornar ao estado anterior.", explanation: "Um plano de reversão existe para reverter uma mudança malsucedida. Os procedimentos para executar essa reversão são seu componente mais essencial." },
+            { domain: 1, question: "Uma empresa quer verificar a identidade de remetentes de e-mail e a integridade das mensagens. Qual tecnologia PKI é MAIS apropriada?", options: ["Hashing com sal", "Criptografia de disco", "Assinaturas digitais", "Key escrow"], answer: "Assinaturas digitais", explanation: "Assinaturas digitais fornecem autenticidade, integridade e não repúdio, sendo ideais para essa finalidade." },
+            { domain: 1, question: "Qual conceito de segurança opera sob o princípio de 'nunca confiar, sempre verificar', exigindo verificação estrita para cada pessoa e dispositivo tentando acessar recursos?", options: ["Análise de lacunas (Gap Analysis)", "Defesa em profundidade", "Zero Trust", "Controle de acesso obrigatório (MAC)"], answer: "Zero Trust", explanation: "A arquitetura Zero Trust trata todas as requisições de acesso como se originassem de uma rede não confiável, exigindo verificação contínua." },
+            
+            // Domínio 2
+            { domain: 2, question: "Um analista investiga um ataque sofisticado focado em roubar segredos industriais a longo prazo. Qual ator de ameaça é MAIS provável?", options: ["Hacktivista", "Script Kiddie", "Estado-Nação", "Insider malicioso"], answer: "Estado-Nação", explanation: "Atores de Estado-Nação possuem altos recursos e focam em objetivos estratégicos de longo prazo, como espionagem industrial." },
+            { domain: 2, question: "Um funcionário recebe um telefonema do 'suporte técnico' pedindo a senha para resolver um problema 'urgente'. Quais princípios de engenharia social estão sendo explorados? (Escolha DUAS)", options: ["Escassez", "Autoridade", "Intimidação", "Consenso", "Urgência"], isMultiSelect: true, correctAnswers: ["Autoridade", "Urgência"], explanation: "O atacante explora a Autoridade (se passando pelo suporte) e a Urgência (problema crítico) para pressionar a vítima." },
+            { domain: 2, question: "Um aviso de segurança descreve uma falha que permite que um software malicioso em uma VM execute comandos no hipervisor. Que tipo de vulnerabilidade é essa?", options: ["Reutilização de recurso", "Escape de VM", "Jailbreaking", "Sideloading"], answer: "Escape de VM", explanation: "Um escape de VM ocorre quando um programa malicioso rompe o isolamento da máquina virtual para acessar o sistema hospedeiro ou o hipervisor." },
+            { domain: 2, question: "Um usuário escaneia um QR code em um panfleto que o redireciona para um site falso que imita o do seu banco, solicitando suas credenciais. Como é conhecido este tipo de ataque?", options: ["Vishing", "Smishing", "Pharming", "Quishing"], answer: "Quishing", explanation: "Quishing (QR code phishing) é uma forma de phishing que usa QR codes para direcionar vítimas a sites maliciosos." },
+
+            // Domínio 3
+            { domain: 3, question: "Qual componente da arquitetura SASE unifica serviços de segurança na nuvem como SWG, CASB e ZTNA?", options: ["SD-WAN", "SSE (Security Service Edge)", "NGFW", "Agente CASB"], answer: "SSE (Security Service Edge)", explanation: "O SSE é o componente de segurança da SASE que agrupa serviços de segurança entregues na nuvem." },
+            { domain: 3, question: "Qual tecnologia é MAIS eficaz para prevenir o vazamento acidental de números de cartão de crédito por e-mail?", options: ["IDS", "WAF", "Data Loss Prevention (DLP)", "Criptografia de e-mail"], answer: "Data Loss Prevention (DLP)", explanation: "Soluções de DLP são projetadas para identificar, monitorar e bloquear a exfiltração de dados sensíveis." },
+            { domain: 3, question: "Uma organização precisa garantir que um serviço online permaneça operacional mesmo se um de seus data centers falhar completamente. Qual estratégia de resiliência seria MAIS apropriada?", options: ["Alta disponibilidade (High Availability)", "RAID-5", "Backups diários", "Recuperação de desastres (Disaster Recovery) com um local quente (hot site)"], answer: "Recuperação de desastres (Disaster Recovery) com um local quente (hot site)", explanation: "Um local quente é um data center redundante e totalmente operacional que pode assumir as operações quase instantaneamente, ideal para garantir a continuidade após uma falha completa do local primário." },
+            
+            // Domínio 4
+            { domain: 4, question: "Qual é a prioridade IMEDIATAMENTE após a detecção de uma violação ativa?", options: ["Coletar evidências.", "Notificar autoridades.", "Conter a propagação isolando os sistemas.", "Analisar a causa raiz."], answer: "Conter a propagação isolando os sistemas.", explanation: "A primeira etapa após a detecção é a contenção, para limitar o dano e impedir que a ameaça se espalhe." },
+            { domain: 4, question: "Após uma varredura de vulnerabilidades relatar falhas críticas, qual é a PRÓXIMA etapa MAIS apropriada?", options: ["Ignorar as descobertas.", "Validar e priorizar a remediação.", "Desligar os servidores.", "Comprar nova ferramenta de varredura."], answer: "Validar e priorizar a remediação.", explanation: "As vulnerabilidades devem ser validadas e priorizadas com base no risco antes da remediação." },
+            { domain: 4, question: "Qual tipo de log forneceria informações sobre tentativas de login bem-sucedidas e falhas em um servidor?", options: ["Logs de firewall", "Logs de aplicação", "Logs de segurança do SO", "Logs de proxy"], answer: "Logs de segurança do SO", explanation: "Os logs de segurança do sistema operacional registram eventos como tentativas de logon, sendo a fonte primária para a investigação." },
+            { domain: 4, question: "Uma ferramenta de segurança que correlaciona eventos de múltiplas fontes, como firewalls e servidores, para gerar alertas contextuais é conhecida como:", options: ["NIDS", "HIPS", "SOAR", "SIEM"], answer: "SIEM", explanation: "Um SIEM (Security Information and Event Management) agrega e analisa dados de log de várias fontes para identificar atividades suspeitas e gerar alertas." },
+
+            // Domínio 5
+            { domain: 5, question: "Uma empresa decide não implementar controles para um risco de alto impacto e baixa probabilidade devido ao custo. Qual estratégia de tratamento de risco está sendo aplicada?", options: ["Mitigação", "Transferência", "Aceitação", "Evitação"], answer: "Aceitação", explanation: "A aceitação do risco é a decisão consciente de assumir um risco, geralmente porque o custo de mitigá-lo é maior do que o risco potencial." },
+            { domain: 5, question: "Qual é o PRINCIPAL objetivo de uma auditoria de segurança externa?", options: ["Treinar a equipe interna.", "Fornecer uma avaliação objetiva e imparcial.", "Vender produtos de segurança.", "Substituir o monitoramento contínuo."], answer: "Fornecer uma avaliação objetiva e imparcial.", explanation: "Auditores externos fornecem uma visão imparcial da conformidade e da postura de segurança de uma organização." },
+            { domain: 5, question: "Uma análise de risco que utiliza categorias como 'Baixo', 'Médio' e 'Alto' para avaliar o impacto, em vez de valores monetários, é um exemplo de que tipo de análise?", options: ["Quantitativa", "Estatística", "Qualitativa", "Comparativa"], answer: "Qualitativa", explanation: "A análise de risco qualitativa usa classificações descritivas (como Baixo, Médio, Alto) para avaliar riscos, sendo mais subjetiva que a análise quantitativa, que usa valores numéricos e monetários." },
+        ];
+
+        // --- VARIÁVEIS DE ESTADO ---
+        let currentQuestions = [], currentQuestionIndex = 0, score = 0, answerSubmitted = false, currentQuizType = '';
+        let timerInterval, timeLeft = 0;
+
+        // --- ELEMENTOS DO DOM ---
+        const homeScreen = document.getElementById('home-screen');
+        const quizScreen = document.getElementById('quiz-container');
+        const resultsScreen = document.getElementById('results-container');
+        const historyScreen = document.getElementById('history-container');
+        const domainButtonsContainer = document.getElementById('domain-selection');
+        
+        const progressBarInner = document.getElementById('progress-bar-inner');
+        const questionCounterText = document.getElementById('question-counter');
+        const timerDisplay = document.getElementById('timer-display');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const explanationText = document.getElementById('explanation-text');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        const scoreText = document.getElementById('score-text');
+        const resultMessage = document.getElementById('result-message');
+        
+        // --- FUNÇÕES DE NAVEGAÇÃO E INICIALIZAÇÃO ---
+        function showScreen(screenName) {
+            [homeScreen, quizScreen, resultsScreen, historyScreen].forEach(s => s.classList.add('hidden'));
+            document.getElementById(screenName + '-container')?.classList.remove('hidden') || document.getElementById(screenName).classList.remove('hidden');
+        }
+
+        function init() {
+            stopTimer();
+            const domains = [
+                { id: 1, name: "1.0 Conceitos Gerais", weight: "12%" },
+                { id: 2, name: "2.0 Ameaças e Vulnerabilidades", weight: "22%" },
+                { id: 3, name: "3.0 Arquitetura de Segurança", weight: "18%" },
+                { id: 4, name: "4.0 Operações de Segurança", weight: "28%" },
+                { id: 5, name: "5.0 Gestão e Supervisão", weight: "20%" },
+            ];
+            domainButtonsContainer.innerHTML = '';
+            domains.forEach(domain => {
+                const button = document.createElement('button');
+                button.className = 'bg-gray-800 hover:bg-gray-700 text-left p-4 rounded-lg transition-colors border border-gray-700';
+                button.innerHTML = `<span class="font-bold text-white">${domain.name}</span><span class="block text-sm text-gray-400 mt-1">Peso: ${domain.weight}</span>`;
+                button.onclick = () => startQuiz(domain.id);
+                domainButtonsContainer.appendChild(button);
+            });
+            showScreen('home-screen');
+        }
+
+        // --- FUNÇÕES DE GERENCIAMENTO DO QUIZ ---
+        function startQuiz(domainId) {
+            currentQuizType = `Domínio ${domainId}`;
+            currentQuestions = questions.filter(q => q.domain === domainId);
+            startQuizFlow();
+        }
+        
+        function startFullExam() {
+            currentQuizType = 'Exame Completo';
+            const TOTAL_QUESTIONS = 25;
+            const distribution = { 1: 3, 2: 6, 3: 4, 4: 7, 5: 5 }; // ~%
+            
+            currentQuestions = [];
+            for (const domainId in distribution) {
+                const domainQuestions = questions.filter(q => q.domain == domainId);
+                // Shuffle and pick
+                for(let i = domainQuestions.length - 1; i > 0; i--){
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [domainQuestions[i], domainQuestions[j]] = [domainQuestions[j], domainQuestions[i]];
+                }
+                currentQuestions.push(...domainQuestions.slice(0, distribution[domainId]));
+            }
+            startQuizFlow(1800); // 30 minutos = 1800 segundos
+        }
+
+        function startQuizFlow(durationInSeconds = 0) {
+            currentQuestionIndex = 0;
+            score = 0;
+            answerSubmitted = false;
+            
+            if (durationInSeconds > 0) {
+                timerDisplay.classList.remove('hidden');
+                startTimer(durationInSeconds);
+            } else {
+                timerDisplay.classList.add('hidden');
+            }
+            
+            showScreen('quiz-container');
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            stopTimer(false); // Pausa o timer enquanto responde
+            answerSubmitted = false;
+            feedbackContainer.classList.add('hidden');
+            const question = currentQuestions[currentQuestionIndex];
+            
+            progressBarInner.style.width = `${((currentQuestionIndex) / currentQuestions.length) * 100}%`;
+            questionCounterText.textContent = `Pergunta ${currentQuestionIndex + 1} de ${currentQuestions.length}`;
+            questionText.textContent = question.question;
+            optionsContainer.innerHTML = '';
+
+            const optionType = question.isMultiSelect ? 'checkbox' : 'radio';
+            question.options.forEach(option => {
+                const label = document.createElement('label');
+                label.className = 'w-full option-btn bg-gray-700 border border-gray-600 p-3 rounded-lg cursor-pointer hover:bg-gray-600 flex items-center';
+                const input = document.createElement('input');
+                input.type = optionType;
+                input.name = 'option';
+                input.value = option;
+                input.className = 'hidden';
+                
+                label.appendChild(input);
+                label.append(option);
+
+                label.onclick = (e) => {
+                    e.preventDefault();
+                    if (answerSubmitted) return;
+                    
+                    if (optionType === 'radio') {
+                        document.querySelectorAll('input[name="option"]').forEach(radio => radio.checked = false);
+                        document.querySelectorAll('label.option-btn').forEach(lbl => lbl.classList.remove('bg-blue-600', 'border-blue-500'));
+                        input.checked = true;
+                        label.classList.add('bg-blue-600', 'border-blue-500');
+                    } else { // checkbox
+                        input.checked = !input.checked;
+                        label.classList.toggle('bg-blue-600', input.checked);
+                        label.classList.toggle('border-blue-500', input.checked);
+                    }
+                };
+                optionsContainer.appendChild(label);
+            });
+
+            submitBtn.textContent = 'Responder';
+            submitBtn.onclick = handleSubmit;
+        }
+        
+        function handleSubmit() {
+            if (answerSubmitted) return;
+            const question = currentQuestions[currentQuestionIndex];
+            
+            let selectedOptions;
+            if (question.isMultiSelect) {
+                selectedOptions = Array.from(document.querySelectorAll('input[name="option"]:checked')).map(cb => cb.value);
+            } else {
+                const selectedRadio = document.querySelector('input[name="option"]:checked');
+                selectedOptions = selectedRadio ? [selectedRadio.value] : [];
+            }
+
+            if (selectedOptions.length === 0) {
+                // Não usar alert. Pode-se adicionar uma mensagem na tela se desejar.
+                return;
+            }
+            
+            answerSubmitted = true;
+            let isCorrect = false;
+            if (question.isMultiSelect) {
+                isCorrect = selectedOptions.length === question.correctAnswers.length && selectedOptions.every(opt => question.correctAnswers.includes(opt));
+            } else {
+                isCorrect = selectedOptions[0] === question.answer;
+            }
+
+            if (isCorrect) score++;
+            
+            // Feedback visual
+            optionsContainer.querySelectorAll('label').forEach(label => {
+                const input = label.querySelector('input');
+                const isCorrectAnswer = question.isMultiSelect ? question.correctAnswers.includes(input.value) : question.answer === input.value;
+                if(isCorrectAnswer) label.classList.add('correct');
+                else if(input.checked) label.classList.add('incorrect');
+            });
+
+            explanationText.textContent = question.explanation;
+            feedbackContainer.classList.remove('hidden');
+
+            submitBtn.textContent = (currentQuestionIndex >= currentQuestions.length - 1) ? 'Ver Resultados' : 'Próxima Pergunta';
+            submitBtn.onclick = handleNext;
+            startTimer(timeLeft, true); // Retoma o timer se houver
+        }
+        
+        function handleNext() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            stopTimer();
+            progressBarInner.style.width = `100%`;
+            showScreen('results');
+            
+            const total = currentQuestions.length;
+            scoreText.textContent = `Você acertou ${score} de ${total} perguntas. (${Math.round((score/total)*100)}%)`;
+            
+            const percentage = (score / total) * 100;
+            resultMessage.textContent = percentage >= 80 ? "Excelente trabalho! Você demonstra um ótimo conhecimento." 
+                                        : percentage >= 50 ? "Bom resultado! Continue revisando para fortalecer seu conhecimento." 
+                                        : "Não desanime. Use este resultado para focar nos seus pontos fracos.";
+            saveResult(currentQuizType, score, total, new Date());
+        }
+
+        // --- FUNÇÕES DO TIMER ---
+        function startTimer(durationInSeconds, resume = false) {
+            if (durationInSeconds <= 0) return;
+            if (!resume) timeLeft = durationInSeconds;
+            
+            stopTimer(); // Garante que não haja timers duplicados
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    alert("O tempo acabou!");
+                    showResults();
+                }
+            }, 1000);
+        }
+
+        function stopTimer(clear = true) {
+            clearInterval(timerInterval);
+            if (clear) timerInterval = null;
+        }
+
+        // --- FUNÇÕES DE HISTÓRICO ---
+        function saveResult(type, currentScore, total, date) {
+            const results = JSON.parse(localStorage.getItem('comptiaSimResults') || '[]');
+            results.unshift({ type, score: currentScore, total, date: date.toISOString() });
+            localStorage.setItem('comptiaSimResults', JSON.stringify(results.slice(0, 50))); // Limita a 50 registros
+        }
+        
+        function displayHistory() {
+            const results = JSON.parse(localStorage.getItem('comptiaSimResults') || '[]');
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+            
+            if (results.length === 0) {
+                historyList.innerHTML = '<p class="text-gray-400 text-center">Nenhum resultado encontrado. Complete um simulado para ver seu progresso!</p>';
+                return;
+            }
+
+            results.forEach(res => {
+                const percentage = Math.round((res.score / res.total) * 100);
+                const colorClass = percentage >= 80 ? 'text-green-400' : percentage >= 50 ? 'text-yellow-400' : 'text-red-400';
+                const date = new Date(res.date).toLocaleString('pt-BR');
+
+                const item = document.createElement('div');
+                item.className = 'bg-gray-700 p-4 rounded-lg flex justify-between items-center';
+                item.innerHTML = `
+                    <div>
+                        <p class="font-bold text-white">${res.type}</p>
+                        <p class="text-sm text-gray-400">${date}</p>
+                    </div>
+                    <p class="text-xl font-bold ${colorClass}">${percentage}%</p>
+                `;
+                historyList.appendChild(item);
+            });
+            showScreen('history-container');
+        }
+
+        // --- LISTENERS DE EVENTOS ---
+        document.getElementById('full-exam-btn').addEventListener('click', startFullExam);
+        document.getElementById('history-btn').addEventListener('click', displayHistory);
+        document.getElementById('restart-btn').addEventListener('click', init);
+        document.getElementById('back-to-home-btn').addEventListener('click', init);
+        document.getElementById('back-from-history-btn').addEventListener('click', init);
+
+        // --- INICIALIZAÇÃO ---
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
