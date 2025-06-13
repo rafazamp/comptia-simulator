@@ -102,35 +102,102 @@
     </div>
 
     <script>
-        // --- BANCO DE DADOS DE PERGUNTAS AMPLIADO ---
+        // --- BANCO DE DADOS DE PERGUNTAS MASSIVAMENTE AMPLIADO ---
         const questions = [
-            // Domínio 1
-            { domain: 1, question: "Uma organização implementou medidas para garantir que os dados não sejam alterados por pessoal não autorizado. Qual princípio da tríade CIA está sendo abordado?", options: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"], answer: "Integridade", explanation: "Integridade garante que os dados sejam precisos e confiáveis, protegendo-os contra modificações não autorizadas." },
-            { domain: 1, question: "Qual elemento é MAIS crucial em um plano de reversão (backout plan)?", options: ["Lista de stakeholders.", "Procedimentos para retornar ao estado anterior.", "Análise de impacto.", "Resultados dos testes."], answer: "Procedimentos para retornar ao estado anterior.", explanation: "Um plano de reversão existe para reverter uma mudança malsucedida. Os procedimentos para executar essa reversão são seu componente mais essencial." },
-            { domain: 1, question: "Uma empresa quer verificar a identidade de remetentes de e-mail e a integridade das mensagens. Qual tecnologia PKI é MAIS apropriada?", options: ["Hashing com sal", "Criptografia de disco", "Assinaturas digitais", "Key escrow"], answer: "Assinaturas digitais", explanation: "Assinaturas digitais fornecem autenticidade, integridade e não repúdio, sendo ideais para essa finalidade." },
-            { domain: 1, question: "Qual conceito de segurança opera sob o princípio de 'nunca confiar, sempre verificar', exigindo verificação estrita para cada pessoa e dispositivo tentando acessar recursos?", options: ["Análise de lacunas (Gap Analysis)", "Defesa em profundidade", "Zero Trust", "Controle de acesso obrigatório (MAC)"], answer: "Zero Trust", explanation: "A arquitetura Zero Trust trata todas as requisições de acesso como se originassem de uma rede não confiável, exigindo verificação contínua." },
-            
-            // Domínio 2
-            { domain: 2, question: "Um analista investiga um ataque sofisticado focado em roubar segredos industriais a longo prazo. Qual ator de ameaça é MAIS provável?", options: ["Hacktivista", "Script Kiddie", "Estado-Nação", "Insider malicioso"], answer: "Estado-Nação", explanation: "Atores de Estado-Nação possuem altos recursos e focam em objetivos estratégicos de longo prazo, como espionagem industrial." },
-            { domain: 2, question: "Um funcionário recebe um telefonema do 'suporte técnico' pedindo a senha para resolver um problema 'urgente'. Quais princípios de engenharia social estão sendo explorados? (Escolha DUAS)", options: ["Escassez", "Autoridade", "Intimidação", "Consenso", "Urgência"], isMultiSelect: true, correctAnswers: ["Autoridade", "Urgência"], explanation: "O atacante explora a Autoridade (se passando pelo suporte) e a Urgência (problema crítico) para pressionar a vítima." },
-            { domain: 2, question: "Um aviso de segurança descreve uma falha que permite que um software malicioso em uma VM execute comandos no hipervisor. Que tipo de vulnerabilidade é essa?", options: ["Reutilização de recurso", "Escape de VM", "Jailbreaking", "Sideloading"], answer: "Escape de VM", explanation: "Um escape de VM ocorre quando um programa malicioso rompe o isolamento da máquina virtual para acessar o sistema hospedeiro ou o hipervisor." },
-            { domain: 2, question: "Um usuário escaneia um QR code em um panfleto que o redireciona para um site falso que imita o do seu banco, solicitando suas credenciais. Como é conhecido este tipo de ataque?", options: ["Vishing", "Smishing", "Pharming", "Quishing"], answer: "Quishing", explanation: "Quishing (QR code phishing) é uma forma de phishing que usa QR codes para direcionar vítimas a sites maliciosos." },
+            // Domínio 1: Conceitos Gerais de Segurança (15 questões)
+            { domain: 1, question: "Qual princípio da tríade CIA é primariamente abordado ao garantir que dados não sejam alterados por pessoal não autorizado?", options: ["Confidencialidade", "Integridade", "Disponibilidade", "Autenticidade"], answer: "Integridade", explanation: "Integridade protege os dados contra modificações não autorizadas, garantindo sua precisão e confiabilidade." },
+            { domain: 1, question: "Qual conceito de segurança opera sob o princípio de 'nunca confiar, sempre verificar'?", options: ["Análise de lacunas", "Defesa em profundidade", "Zero Trust", "Controle de acesso obrigatório (MAC)"], answer: "Zero Trust", explanation: "A arquitetura Zero Trust trata todas as requisições de acesso como se originassem de uma rede não confiável, exigindo verificação contínua." },
+            { domain: 1, question: "Qual dos seguintes é um exemplo de controle de segurança físico?", options: ["Firewall", "Software antivírus", "Câmeras de segurança", "Política de senhas"], answer: "Câmeras de segurança", explanation: "Controles físicos são medidas tangíveis para proteger instalações, sistemas e equipamentos. Câmeras, fechaduras e guardas são exemplos." },
+            { domain: 1, question: "Qual é a principal vantagem da criptografia assimétrica sobre a criptografia simétrica?", options: ["É mais rápida.", "Usa a mesma chave para criptografar e descriptografar.", "Facilita a distribuição segura de chaves.", "Requer menos poder computacional."], answer: "Facilita a distribuição segura de chaves.", explanation: "A criptografia assimétrica usa um par de chaves (pública e privada), eliminando o problema da troca segura de chaves que existe na criptografia simétrica." },
+            { domain: 1, question: "Qual é a função de uma Autoridade de Certificação (CA) em uma PKI?", options: ["Gerar chaves para usuários.", "Verificar a identidade e emitir certificados digitais.", "Armazenar chaves privadas.", "Criptografar tráfego de rede."], answer: "Verificar a identidade e emitir certificados digitais.", explanation: "A CA atua como uma terceira parte confiável que valida identidades e emite certificados digitais, que atestam a propriedade de uma chave pública." },
+            { domain: 1, question: "Uma técnica que torna hashes de senha mais lentos de computar, e portanto mais resistentes a ataques de força bruta, é conhecida como:", options: ["Salting", "Hashing", "Key stretching", "Clustering"], answer: "Key stretching", explanation: "Key stretching (como PBKDF2 ou bcrypt) adiciona complexidade computacional ao processo de hashing, tornando cada tentativa de adivinhação de senha significativamente mais lenta para um atacante." },
+            { domain: 1, question: "Uma organização precisa de um certificado SSL para proteger múltiplos subdomínios (ex: `site1.exemplo.com`, `site2.exemplo.com`). Qual tipo de certificado seria o MAIS apropriado e custo-efetivo?", options: ["Certificado de Validação Estendida (EV)", "Certificado de Domínio Único", "Certificado Wildcard (*.exemplo.com)", "Certificado de Assinatura de Código"], answer: "Certificado Wildcard (*.exemplo.com)", explanation: "Um certificado Wildcard usa um asterisco (*) para representar qualquer subdomínio em um determinado nível, permitindo que um único certificado proteja múltiplos subdomínios." },
+            { domain: 1, question: "O conceito de garantir que os dados de cidadãos de um país sejam armazenados e processados dentro das fronteiras desse país é conhecido como:", options: ["Data masking", "Data sovereignty", "Data loss prevention", "Data minimization"], answer: "Data sovereignty", explanation: "Data sovereignty (soberania de dados) é o princípio de que os dados estão sujeitos às leis e estruturas de governança do país onde estão localizados." },
+            { domain: 1, question: "Qual é a principal diferença entre autenticação e autorização?", options: ["Autenticação verifica quem você é; autorização determina o que você pode fazer.", "Autorização verifica quem você é; autenticação determina o que você pode fazer.", "Ambos são sinônimos para o processo de login.", "Autenticação é para usuários; autorização é para sistemas."], answer: "Autenticação verifica quem você é; autorização determina o que você pode fazer.", explanation: "Autenticação é o processo de provar uma identidade (ex: com senha, biometria). Autorização é o processo de conceder ou negar permissões para acessar recursos com base nessa identidade." },
+            { domain: 1, question: "Qual algoritmo de hashing é considerado inseguro e obsoleto para a maioria das aplicações de segurança devido a vulnerabilidades de colisão conhecidas?", options: ["SHA-256", "SHA-3", "MD5", "HMAC"], answer: "MD5", explanation: "MD5 sofre de vulnerabilidades de colisão severas, o que significa que é possível encontrar duas entradas diferentes que produzem o mesmo hash." },
+            { domain: 1, question: "Qual das seguintes opções é um controle de segurança preventivo?", options: ["Logs de auditoria", "Sistema de detecção de intrusão (IDS)", "Política de senhas fortes", "Plano de recuperação de desastres"], answer: "Política de senhas fortes", explanation: "Controles preventivos visam impedir que um incidente ocorra. Uma política de senhas fortes dificulta ataques de adivinhação de senhas. Logs de auditoria e IDS são controles detectivos, e um plano de recuperação é um controle corretivo/recuperativo." },
+            { domain: 1, question: "O que é 'não repúdio' no contexto da segurança da informação?", options: ["A garantia de que os dados não foram alterados.", "A garantia de que o remetente de uma mensagem não pode negar que a enviou.", "A garantia de que os dados estão disponíveis quando necessários.", "A garantia de que apenas usuários autorizados podem acessar os dados."], answer: "A garantia de que o remetente de uma mensagem não pode negar que a enviou.", explanation: "Não repúdio fornece prova da origem e integridade dos dados. É um serviço que garante que uma entidade não possa negar a autoria de uma ação ou mensagem, geralmente alcançado através de assinaturas digitais." },
+            { domain: 1, question: "Qual das seguintes opções é considerada Informação de Identificação Pessoal (PII)?", options: ["A marca de um carro", "A data de fundação de uma empresa", "O nome completo e a data de nascimento de uma pessoa", "O CEP de uma cidade"], answer: "O nome completo e a data de nascimento de uma pessoa", explanation: "PII é qualquer informação que pode ser usada para identificar um indivíduo específico. A combinação de nome completo e data de nascimento é um exemplo clássico de PII." },
+            { domain: 1, question: "Uma propriedade criptográfica que garante que o comprometimento de uma chave de sessão de longo prazo não comprometa chaves de sessão passadas é conhecida como:", options: ["Key escrow", "Perfect Forward Secrecy (PFS)", "Key stretching", "Chave simétrica"], answer: "Perfect Forward Secrecy (PFS)", explanation: "PFS, ou sigilo adiante, garante que cada sessão de comunicação gere uma chave de sessão única e efêmera. Mesmo que a chave privada do servidor seja comprometida no futuro, as sessões passadas não podem ser descriptografadas." },
+            { domain: 1, question: "Qual dos seguintes é um framework de gerenciamento de riscos de cibersegurança desenvolvido pelo governo dos EUA?", options: ["ISO/IEC 27001", "COBIT", "ITIL", "NIST Cybersecurity Framework (CSF)"], answer: "NIST Cybersecurity Framework (CSF)", explanation: "O NIST CSF é um conjunto de diretrizes voluntárias para ajudar as organizações a gerenciar e reduzir o risco de cibersegurança. ISO 27001 é um padrão internacional, enquanto COBIT e ITIL são frameworks focados em governança de TI e gerenciamento de serviços, respectivamente." },
 
-            // Domínio 3
+            // Domínio 2: Ameaças, Vulnerabilidades e Mitigações (20 questões)
+            { domain: 2, question: "Qual ator de ameaça é MAIS provavelmente responsável por um ataque sofisticado focado em roubar segredos industriais a longo prazo?", options: ["Hacktivista", "Script Kiddie", "Estado-Nação", "Insider malicioso"], answer: "Estado-Nação", explanation: "Atores de Estado-Nação possuem altos recursos e focam em objetivos estratégicos de longo prazo, como espionagem industrial." },
+            { domain: 2, question: "Uma falha que permite que um malware em uma VM execute comandos no hipervisor é conhecida como:", options: ["Reutilização de recurso", "Escape de VM", "Jailbreaking", "Sideloading"], answer: "Escape de VM", explanation: "Um escape de VM ocorre quando um programa malicioso rompe o isolamento da máquina virtual para acessar o sistema hospedeiro." },
+            { domain: 2, question: "Um ataque que redireciona um usuário de um site legítimo para um site malicioso alterando o cache DNS é chamado de:", options: ["Phishing", "Pharming", "Vishing", "Spoofing"], answer: "Pharming", explanation: "Pharming corrompe a resolução de nomes de domínio (DNS) para redirecionar usuários para sites fraudulentos." },
+            { domain: 2, question: "Um ataque de phishing altamente direcionado, que utiliza informações pessoais sobre o alvo para aumentar a credibilidade, é conhecido como:", options: ["Whaling", "Vishing", "Smishing", "Spear phishing"], answer: "Spear phishing", explanation: "Spear phishing é um ataque de phishing direcionado a um indivíduo ou organização específica." },
+            { domain: 2, question: "Uma vulnerabilidade de 'Cross-Site Scripting' (XSS) permite que um atacante faça o quê?", options: ["Execute comandos SQL no banco de dados.", "Injete scripts do lado do cliente no navegador de outros usuários.", "Obtenha acesso root ao servidor.", "Desligue o servidor web."], answer: "Injete scripts do lado do cliente no navegador de outros usuários.", explanation: "O XSS explora a confiança que um usuário tem em um site, permitindo que um atacante injete scripts maliciosos (geralmente JavaScript) que são executados no navegador da vítima." },
+            { domain: 2, question: "Qual é a principal razão para usar 'salting' ao armazenar hashes de senhas?", options: ["Acelerar o login.", "Garantir que o mesmo hash seja sempre gerado.", "Mitigar ataques de rainbow table.", "Criptografar o hash."], answer: "Mitigar ataques de rainbow table.", explanation: "Um 'sal' é um valor aleatório único adicionado a cada senha antes do hashing, tornando as rainbow tables ineficazes." },
+            { domain: 2, question: "Uma vulnerabilidade que é desconhecida pelo fornecedor do software e para a qual não existe patch é chamada de:", options: ["Vulnerabilidade legada", "Vulnerabilidade de dia zero (Zero-day)", "Configuração incorreta", "Escalonamento de privilégios"], answer: "Vulnerabilidade de dia zero (Zero-day)", explanation: "Uma vulnerabilidade de dia zero é uma falha de segurança descoberta por atacantes antes que o fornecedor tenha conhecimento ou tempo para criar uma correção." },
+            { domain: 2, question: "Um malware que permanece inativo até que uma condição específica seja atendida é chamado de:", options: ["Worm", "Spyware", "Logic Bomb (Bomba Lógica)", "Fileless Malware"], answer: "Logic Bomb (Bomba Lógica)", explanation: "Uma bomba lógica é um código malicioso que é acionado quando uma condição específica ocorre." },
+            { domain: 2, question: "Qual tipo de ataque envolve um atacante tentando um grande número de senhas comuns contra múltiplas contas de usuário?", options: ["Brute-force attack", "Dictionary attack", "Password spraying", "Credential stuffing"], answer: "Password spraying", explanation: "Password spraying é uma técnica de ataque 'lenta e baixa' que evita o bloqueio de contas ao tentar poucas senhas populares em muitas contas." },
+            { domain: 2, question: "Um ataque que explora uma vulnerabilidade em uma organização menos segura que faz parte da cadeia de suprimentos de uma organização maior é conhecido como:", options: ["Watering hole attack", "Supply chain attack", "Man-in-the-middle attack", "Evil twin attack"], answer: "Supply chain attack", explanation: "Um ataque à cadeia de suprimentos visa uma organização-alvo comprometendo um de seus fornecedores ou parceiros confiáveis." },
+            { domain: 2, question: "Qual das seguintes opções descreve MELHOR um ataque de adversário no meio (Adversary-in-the-middle, AitM)?", options: ["É um ataque de negação de serviço.", "É um tipo de phishing que usa um proxy reverso para roubar cookies de sessão.", "É um ataque de dicionário.", "É uma vulnerabilidade no hipervisor."], answer: "É um tipo de phishing que usa um proxy reverso para roubar cookies de sessão.", explanation: "AitM é uma evolução do phishing. Ao usar um proxy reverso, o atacante pode interceptar a comunicação em tempo real, capturando credenciais e cookies de sessão para contornar a MFA." },
+            { domain: 2, question: "Uma aplicação web é vulnerável a ataques de XML External Entity (XXE). Que tipo de dano um atacante pode causar?", options: ["Injetar JavaScript no navegador.", "Ler arquivos locais do servidor web.", "Contornar a autenticação.", "Desligar o banco de dados."], answer: "Ler arquivos locais do servidor web.", explanation: "Uma vulnerabilidade XXE permite que um atacante interfira no processamento de dados XML, o que pode levar à divulgação de arquivos locais no servidor ou varredura de portas na rede interna." },
+            { domain: 2, question: "Um malware que criptografa os arquivos da vítima e exige um pagamento para descriptografá-los é conhecido como:", options: ["Spyware", "Adware", "Ransomware", "Rootkit"], answer: "Ransomware", explanation: "Ransomware é um tipo de ataque de extorsão que bloqueia o acesso aos dados da vítima, geralmente por criptografia, e exige um resgate (ransom) para restaurar o acesso." },
+            { domain: 2, question: "Um invasor configura um ponto de acesso Wi-Fi com o mesmo nome (SSID) de uma rede legítima próxima para enganar os usuários a se conectarem. Que tipo de ataque é este?", options: ["Evil twin", "Bluesnarfing", "Jamming", "Bluejacking"], answer: "Evil twin", explanation: "Um ataque de gêmeo maligno (evil twin) envolve a criação de um ponto de acesso sem fio fraudulento que se passa por um legítimo para interceptar o tráfego dos usuários que se conectam a ele." },
+            { domain: 2, question: "Qual vulnerabilidade ocorre quando um programa tenta escrever dados além dos limites de um bloco de memória alocado?", options: ["Race condition", "Integer overflow", "Buffer overflow", "Memory leak"], answer: "Buffer overflow", explanation: "Um buffer overflow pode levar a comportamento errático do sistema, travamentos ou, de forma mais perigosa, à execução de código malicioso, pois o excesso de dados pode sobrescrever áreas adjacentes da memória que contêm instruções executáveis." },
+            { domain: 2, question: "Um atacante que já tem acesso a uma rede e tenta obter privilégios mais altos, como de administrador, está realizando um ataque de:", options: ["Escalonamento de privilégios (Privilege escalation)", "Movimento lateral (Lateral movement)", "Exfiltração de dados", "Persistência"], answer: "Escalonamento de privilégios (Privilege escalation)", explanation: "O escalonamento de privilégios é o ato de explorar uma falha ou vulnerabilidade para obter acesso elevado a recursos que normalmente são restritos. É uma etapa comum após o comprometimento inicial." },
+            { domain: 2, question: "Qual das seguintes opções é uma fonte de inteligência de ameaças de código aberto (OSINT)?", options: ["Logs de firewall internos da empresa.", "Relatórios confidenciais do governo.", "Fóruns de hackers em redes sociais e na dark web.", "Alertas de um SIEM proprietário."], answer: "Fóruns de hackers em redes sociais e na dark web.", explanation: "OSINT refere-se à coleta de informações de fontes publicamente disponíveis. Isso inclui mídias sociais, blogs, fóruns públicos e sites de notícias, que podem fornecer informações sobre novas táticas e alvos de atacantes." },
+            { domain: 2, question: "Um ataque que visa sobrecarregar os recursos de um servidor de autenticação, enviando um grande volume de solicitações de login, é um tipo de:", options: ["Ataque de negação de serviço (DoS)", "Ataque de injeção de SQL", "Ataque de repetição (Replay attack)", "Ataque de força bruta"], answer: "Ataque de negação de serviço (DoS)", explanation: "Embora um ataque de força bruta tente adivinhar credenciais, o objetivo principal descrito aqui é esgotar os recursos do servidor (CPU, memória) com um volume massivo de solicitações, caracterizando um ataque de negação de serviço." },
+            { domain: 2, question: "Um malware que se esconde profundamente no sistema operacional, muitas vezes modificando o kernel ou drivers para evitar a detecção, é chamado de:", options: ["Vírus", "Adware", "Keylogger", "Rootkit"], answer: "Rootkit", explanation: "Um rootkit é projetado para obter controle de nível de administrador sobre um sistema e se ocultar ativamente (e outras malwares) das ferramentas de segurança e do sistema operacional." },
+            { domain:2, question: "Qual tipo de engenharia social envolve deixar um dispositivo de armazenamento infectado, como um pen drive, em um local onde uma vítima provavelmente o encontrará e o usará?", options: ["Tailgating", "Baiting", "Quid pro quo", "Dumpster diving"], answer: "Baiting", explanation: "Baiting (isca) explora a curiosidade humana. O atacante deixa uma 'isca' (como um pen drive rotulado 'Folha de Pagamento') na esperança de que um funcionário o conecte a um computador da empresa, instalando malware." },
+
+            // Domínio 3: Arquitetura de Segurança (15 questões)
             { domain: 3, question: "Qual componente da arquitetura SASE unifica serviços de segurança na nuvem como SWG, CASB e ZTNA?", options: ["SD-WAN", "SSE (Security Service Edge)", "NGFW", "Agente CASB"], answer: "SSE (Security Service Edge)", explanation: "O SSE é o componente de segurança da SASE que agrupa serviços de segurança entregues na nuvem." },
             { domain: 3, question: "Qual tecnologia é MAIS eficaz para prevenir o vazamento acidental de números de cartão de crédito por e-mail?", options: ["IDS", "WAF", "Data Loss Prevention (DLP)", "Criptografia de e-mail"], answer: "Data Loss Prevention (DLP)", explanation: "Soluções de DLP são projetadas para identificar, monitorar e bloquear a exfiltração de dados sensíveis." },
-            { domain: 3, question: "Uma organização precisa garantir que um serviço online permaneça operacional mesmo se um de seus data centers falhar completamente. Qual estratégia de resiliência seria MAIS apropriada?", options: ["Alta disponibilidade (High Availability)", "RAID-5", "Backups diários", "Recuperação de desastres (Disaster Recovery) com um local quente (hot site)"], answer: "Recuperação de desastres (Disaster Recovery) com um local quente (hot site)", explanation: "Um local quente é um data center redundante e totalmente operacional que pode assumir as operações quase instantaneamente, ideal para garantir a continuidade após uma falha completa do local primário." },
+            { domain: 3, question: "Qual modelo de serviço em nuvem oferece ao cliente o maior nível de controle sobre o sistema operacional e as aplicações?", options: ["SaaS", "PaaS", "IaaS", "FaaS"], answer: "IaaS", explanation: "No modelo IaaS, o cliente tem controle total sobre o sistema operacional, middleware e aplicações." },
+            { domain: 3, question: "O que é um 'honeypot' no contexto da segurança de rede?", options: ["Um servidor de produção com segurança reforçada.", "Um sistema de engodo projetado para atrair atacantes.", "Um banco de dados de credenciais.", "Um tipo de firewall."], answer: "Um sistema de engodo projetado para atrair atacantes.", explanation: "Um honeypot é um sistema sacrificial que parece ser um alvo legítimo. Seu objetivo é distrair atacantes, coletar informações sobre suas técnicas e fornecer alerta precoce." },
+            { domain: 3, question: "Qual é a principal diferença entre um IDS e um IPS?", options: ["IDS é hardware, IPS é software.", "IDS detecta e alerta, enquanto IPS pode bloquear ativamente.", "IDS é para redes internas, IPS é para o perímetro.", "IDS analisa tráfego, IPS analisa logs."], answer: "IDS detecta e alerta, enquanto IPS pode bloquear ativamente.", explanation: "Um IDS opera em modo passivo, gerando alertas. Um IPS é colocado em linha (inline) e pode tomar ações preventivas, como descartar pacotes maliciosos." },
+            { domain: 3, question: "Em um modelo de responsabilidade compartilhada na nuvem (IaaS), qual das seguintes opções é uma responsabilidade do cliente?", options: ["Segurança do hardware.", "Manutenção do hipervisor.", "Aplicação de patches no SO do cliente.", "Segurança física do data center."], answer: "Aplicação de patches no SO do cliente.", explanation: "No modelo IaaS, o cliente é responsável pela segurança 'na' nuvem, o que inclui o SO, aplicações e dados." },
+            { domain: 3, question: "Uma organização implementa uma solução onde os usuários fazem login uma vez para acessar múltiplos aplicativos. Que tecnologia está sendo usada?", options: ["MFA", "Single Sign-On (SSO)", "RBAC", "Biometria"], answer: "Single Sign-On (SSO)", explanation: "O SSO é um esquema de autenticação que permite que um usuário faça login com um único conjunto de credenciais para obter acesso a múltiplos sistemas." },
+            { domain: 3, question: "O processo de remover detalhes identificadores de um conjunto de dados antes de compartilhá-lo para análise é conhecido como:", options: ["Agregação de dados", "Tokenização", "Mascaramento de dados (Data masking)", "Hashing de dados"], answer: "Mascaramento de dados (Data masking)", explanation: "O mascaramento de dados cria uma versão estruturalmente semelhante, mas não autêntica, dos dados, substituindo informações sensíveis por dados fictícios." },
+            { domain: 3, question: "Qual das seguintes opções descreve melhor o tráfego 'East-West' em um data center?", options: ["Tráfego que entra e sai do data center para a internet.", "Tráfego entre servidores dentro do mesmo data center.", "Tráfego de um usuário remoto para um servidor.", "Tráfego criptografado."], answer: "Tráfego entre servidores dentro do mesmo data center.", explanation: "O tráfego East-West refere-se à comunicação lateral entre servidores dentro de um data center, em contraste com o tráfego North-South, que flui para dentro e para fora do data center." },
+            { domain: 3, question: "O uso de ferramentas para definir e gerenciar infraestrutura por meio de arquivos de configuração é conhecido como:", options: ["Virtualização", "Containerização", "Infrastructure as Code (IaC)", "Software-Defined Networking (SDN)"], answer: "Infrastructure as Code (IaC)", explanation: "IaC permite que as equipes gerenciem e provisionem infraestrutura de forma automática e repetível, melhorando a segurança com configurações consistentes." },
+            { domain: 3, question: "Qual dispositivo de segurança seria MAIS eficaz para aplicar políticas de segurança ao tráfego entre diferentes VLANs?", options: ["Switch de Camada 2", "Hub", "Firewall", "Balanceador de carga"], answer: "Firewall", explanation: "Um firewall é o dispositivo projetado para inspecionar o tráfego inter-VLAN e aplicar políticas de segurança baseadas em estado, portas, protocolos e aplicações para permitir ou negar o acesso." },
+            { domain: 3, question: "Qual das seguintes tecnologias é um protocolo seguro para transferir arquivos sobre uma conexão de rede?", options: ["FTP", "Telnet", "HTTP", "SFTP"], answer: "SFTP", explanation: "SFTP (SSH File Transfer Protocol) é um protocolo seguro que roda sobre o SSH para fornecer criptografia e autenticação forte para transferência de arquivos. FTP, Telnet e HTTP são protocolos inseguros que transmitem dados em texto claro." },
+            { domain: 3, question: "Uma empresa está implementando uma estratégia de segurança em camadas, onde múltiplos controles são colocados em série. Como é chamada essa estratégia?", options: ["Menor privilégio", "Defesa em profundidade (Defense in depth)", "Segregação de funções", "Zero Trust"], answer: "Defesa em profundidade (Defense in depth)", explanation: "Defesa em profundidade é um conceito onde múltiplos controles de segurança são implementados em camadas. Se um controle falhar, outro controle pode impedir ou retardar o ataque." },
+            { domain: 3, question: "Qual tecnologia de segurança de e-mail é projetada para ajudar a detectar e prevenir a falsificação de e-mails (spoofing), permitindo que os proprietários de domínios especifiquem quais servidores de e-mail estão autorizados a enviar e-mails em seu nome?", options: ["S/MIME", "PGP", "DMARC", "TLS"], answer: "DMARC", explanation: "DMARC (Domain-based Message Authentication, Reporting, and Conformance) baseia-se em SPF e DKIM para fornecer uma política que informa aos servidores de e-mail receptores o que fazer com e-mails que falham na autenticação, ajudando a combater phishing e spoofing." },
+            { domain: 3, question: "Qual é a principal preocupação de segurança ao usar contêineres, como o Docker?", options: ["Ataques de negação de serviço no host.", "Vulnerabilidades no kernel do host compartilhado.", "Uso excessivo de armazenamento em disco.", "Lentidão na inicialização das aplicações."], answer: "Vulnerabilidades no kernel do host compartilhado.", explanation: "Como todos os contêineres em um host compartilham o mesmo kernel do sistema operacional, uma vulnerabilidade no kernel pode potencialmente permitir que um atacante em um contêiner escape e comprometa o host e todos os outros contêineres." },
             
-            // Domínio 4
+            // Domínio 4: Operações de Segurança (20 questões)
             { domain: 4, question: "Qual é a prioridade IMEDIATAMENTE após a detecção de uma violação ativa?", options: ["Coletar evidências.", "Notificar autoridades.", "Conter a propagação isolando os sistemas.", "Analisar a causa raiz."], answer: "Conter a propagação isolando os sistemas.", explanation: "A primeira etapa após a detecção é a contenção, para limitar o dano e impedir que a ameaça se espalhe." },
-            { domain: 4, question: "Após uma varredura de vulnerabilidades relatar falhas críticas, qual é a PRÓXIMA etapa MAIS apropriada?", options: ["Ignorar as descobertas.", "Validar e priorizar a remediação.", "Desligar os servidores.", "Comprar nova ferramenta de varredura."], answer: "Validar e priorizar a remediação.", explanation: "As vulnerabilidades devem ser validadas e priorizadas com base no risco antes da remediação." },
             { domain: 4, question: "Qual tipo de log forneceria informações sobre tentativas de login bem-sucedidas e falhas em um servidor?", options: ["Logs de firewall", "Logs de aplicação", "Logs de segurança do SO", "Logs de proxy"], answer: "Logs de segurança do SO", explanation: "Os logs de segurança do sistema operacional registram eventos como tentativas de logon, sendo a fonte primária para a investigação." },
-            { domain: 4, question: "Uma ferramenta de segurança que correlaciona eventos de múltiplas fontes, como firewalls e servidores, para gerar alertas contextuais é conhecida como:", options: ["NIDS", "HIPS", "SOAR", "SIEM"], answer: "SIEM", explanation: "Um SIEM (Security Information and Event Management) agrega e analisa dados de log de várias fontes para identificar atividades suspeitas e gerar alertas." },
+            { domain: 4, question: "Uma ferramenta de segurança que correlaciona eventos de múltiplas fontes para gerar alertas contextuais é conhecida como:", options: ["NIDS", "HIPS", "SOAR", "SIEM"], answer: "SIEM", explanation: "Um SIEM (Security Information and Event Management) agrega e analisa dados de log de várias fontes para identificar atividades suspeitas." },
+            { domain: 4, question: "Qual fase do processo de resposta a incidentes envolve a remoção completa do artefato malicioso do ambiente?", options: ["Contenção", "Erradicação", "Recuperação", "Lições aprendidas"], answer: "Erradicação", explanation: "A erradicação é a fase onde a causa raiz do incidente é eliminada, como remover malware e corrigir vulnerabilidades." },
+            { domain: 4, question: "Ao coletar evidências digitais, qual é a primeira coisa a ser coletada de um sistema ativo, de acordo com a ordem de volatilidade?", options: ["Arquivos de swap.", "Dados do registo da CPU e cache.", "Logs do sistema.", "Dados de roteamento."], answer: "Dados do registo da CPU e cache.", explanation: "A ordem de volatilidade dita que os dados mais voláteis devem ser coletados primeiro. Os dados nos registradores da CPU e na cache são os mais voláteis." },
+            { domain: 4, question: "Qual tipo de backup salva apenas os arquivos que foram alterados desde o ÚLTIMO BACKUP COMPLETO?", options: ["Completo", "Incremental", "Diferencial", "Snapshot"], answer: "Diferencial", explanation: "Um backup diferencial copia todos os dados alterados desde o último backup completo. Para restaurar, você precisa do último completo e do último diferencial." },
+            { domain: 4, question: "O que é um 'baseline' de configuração no contexto de hardening de sistemas?", options: ["Um snapshot de um sistema comprometido.", "Um conjunto padronizado e seguro de configurações.", "Uma lista de vulnerabilidades conhecidas.", "O primeiro backup completo."], answer: "Um conjunto padronizado e seguro de configurações.", explanation: "Um baseline de segurança é uma configuração mínima e padronizada para um tipo de sistema, garantindo que ele seja implementado em um estado seguro." },
+            { domain: 4, question: "Qual o propósito de um playbook de resposta a incidentes?", options: ["Documentar políticas de segurança.", "Fornecer uma lista de contatos.", "Oferecer um guia passo a passo para lidar com incidentes específicos.", "Registrar incidentes passados."], answer: "Oferecer um guia passo a passo para lidar com incidentes específicos.", explanation: "Um playbook é um guia detalhado que descreve os procedimentos, funções e responsabilidades para responder a um tipo específico de incidente." },
+            { domain: 4, question: "Um analista de segurança usa uma plataforma que automatiza a resposta a alertas. Que tipo de plataforma está sendo usada?", options: ["IDS", "EDR", "DLP", "SOAR"], answer: "SOAR", explanation: "Uma plataforma SOAR (Security Orchestration, Automation, and Response) é projetada para automatizar e orquestrar tarefas de segurança, permitindo respostas mais rápidas." },
+            { domain: 4, question: "A prática de procurar proativamente por sinais de comprometimento em uma rede é conhecida como:", options: ["Gerenciamento de vulnerabilidades", "Threat hunting (Caça a ameaças)", "Análise de logs", "Auditoria de segurança"], answer: "Threat hunting (Caça a ameaças)", explanation: "Threat hunting é uma abordagem proativa onde os analistas buscam ativamente por ameaças que possam ter contornado as defesas existentes." },
+            { domain: 4, question: "Qual protocolo é comumente usado para compartilhar informações sobre ameaças cibernéticas em um formato padronizado?", options: ["SNMP", "STIX/TAXII", "SYSLOG", "LDAP"], answer: "STIX/TAXII", explanation: "STIX é uma linguagem padronizada para descrever ameaças, e TAXII é um protocolo para compartilhar essas informações, permitindo o intercâmbio automatizado de inteligência de ameaças." },
+            { domain: 4, question: "A documentação que rastreia a posse e o manuseio de evidências digitais é chamada de:", options: ["Ordem de volatilidade", "Análise de causa raiz", "Cadeia de custódia (Chain of custody)", "Declaração de impacto"], answer: "Cadeia de custódia (Chain of custody)", explanation: "A cadeia de custódia é um processo de documentação crucial na forense digital para garantir a integridade e a admissibilidade da evidência." },
+            { domain: 4, question: "Uma varredura de vulnerabilidades que é realizada sem credenciais de login para os sistemas-alvo é conhecida como:", options: ["Varredura autenticada", "Varredura não autenticada (unauthenticated scan)", "Varredura de conformidade", "Varredura de aplicação web"], answer: "Varredura não autenticada (unauthenticated scan)", explanation: "Uma varredura não autenticada (ou não credenciada) simula a perspectiva de um atacante externo, identificando vulnerabilidades que podem ser vistas da rede sem ter acesso privilegiado ao sistema." },
+            { domain: 4, question: "Qual tecnologia de segurança de endpoint é projetada para detectar e investigar ameaças avançadas, fornecendo visibilidade detalhada sobre os processos e atividades do sistema?", options: ["Antivírus tradicional", "Firewall de host", "Endpoint Detection and Response (EDR)", "Criptografia de disco completo"], answer: "Endpoint Detection and Response (EDR)", explanation: "As soluções de EDR vão além do antivírus baseado em assinaturas, monitorando continuamente os endpoints para detectar comportamentos suspeitos e fornecendo ferramentas para investigação e resposta a incidentes." },
+            { domain: 4, question: "Qual protocolo é usado para autenticação centralizada, autorização e contabilização (AAA) para acesso à rede, e é comumente usado em VPNs e conexões Wi-Fi?", options: ["LDAP", "Kerberos", "RADIUS", "TACACS+"], answer: "RADIUS", explanation: "RADIUS (Remote Authentication Dial-In User Service) é um protocolo cliente-servidor amplamente utilizado que fornece gerenciamento AAA para usuários que se conectam e usam um serviço de rede." },
+            { domain: 4, question: "Qual das seguintes opções descreve melhor o conceito de 'menor privilégio'?", options: ["Conceder a todos os usuários acesso de administrador para simplificar o gerenciamento.", "Conceder aos usuários apenas as permissões estritamente necessárias para realizar suas tarefas.", "Bloquear todo o acesso à rede por padrão.", "Usar senhas que são alteradas a cada 30 dias."], answer: "Conceder aos usuários apenas as permissões estritamente necessárias para realizar suas tarefas.", explanation: "O princípio do menor privilégio é um conceito fundamental de segurança que limita o acesso de um usuário (ou sistema) apenas aos recursos e permissões necessários para desempenhar sua função, minimizando os danos em caso de comprometimento da conta." },
+            { domain: 4, question: "Ao realizar uma análise forense de um disco rígido, um analista primeiro cria uma cópia bit a bit do disco original. Essa cópia é chamada de:", options: ["Backup", "Snapshot", "Imagem forense (Forensic image)", "Clone"], answer: "Imagem forense (Forensic image)", explanation: "Uma imagem forense é uma cópia exata, setor por setor, de uma mídia de armazenamento. A análise é sempre realizada na imagem, e não no disco original, para preservar a integridade da evidência original." },
+            { domain: 4, question: "Qual tipo de exercício de resposta a incidentes envolve uma discussão guiada sobre um cenário de incidente, sem a utilização real de sistemas ou ferramentas?", options: ["Simulação completa", "Teste de failover", "Exercício de mesa (Tabletop exercise)", "Teste de penetração"], answer: "Exercício de mesa (Tabletop exercise)", explanation: "Um exercício de mesa é um workshop baseado em discussão onde os membros da equipe de resposta a incidentes se reúnem para percorrer um cenário hipotético, revisando seus papéis, procedimentos e planos de resposta." },
+            { domain:4, question: "Um analista de segurança está revisando os logs de um firewall e nota um grande número de pacotes TCP SYN sendo enviados para um servidor web a partir de vários endereços IP de origem, sem os pacotes ACK correspondentes. Que tipo de ataque isso provavelmente indica?", options: ["Ataque de smurf", "Ataque de ping da morte", "Ataque de inundação SYN (SYN flood)", "Ataque de repetição (replay)"], answer: "Ataque de inundação SYN (SYN flood)", explanation: "Um ataque de inundação SYN é um tipo de ataque de negação de serviço que explora o handshake de três vias do TCP. O atacante envia um grande número de pacotes SYN, mas nunca completa o handshake, deixando o servidor com um grande número de conexões semiabertas, esgotando seus recursos." },
+            { domain: 4, question: "O processo de verificar periodicamente os direitos de acesso de um usuário para garantir que eles ainda são apropriados para sua função atual é chamado de:", options: ["Provisionamento de conta", "Recertificação de acesso (Access recertification)", "Federação de identidade", "Delegação de acesso"], answer: "Recertificação de acesso (Access recertification)", explanation: "A recertificação ou revisão de acesso é um controle crucial para evitar o 'acúmulo de privilégios' (privilege creep), garantindo que os usuários não mantenham acesso a sistemas e dados de que não precisam mais." },
 
-            // Domínio 5
-            { domain: 5, question: "Uma empresa decide não implementar controles para um risco de alto impacto e baixa probabilidade devido ao custo. Qual estratégia de tratamento de risco está sendo aplicada?", options: ["Mitigação", "Transferência", "Aceitação", "Evitação"], answer: "Aceitação", explanation: "A aceitação do risco é a decisão consciente de assumir um risco, geralmente porque o custo de mitigá-lo é maior do que o risco potencial." },
-            { domain: 5, question: "Qual é o PRINCIPAL objetivo de uma auditoria de segurança externa?", options: ["Treinar a equipe interna.", "Fornecer uma avaliação objetiva e imparcial.", "Vender produtos de segurança.", "Substituir o monitoramento contínuo."], answer: "Fornecer uma avaliação objetiva e imparcial.", explanation: "Auditores externos fornecem uma visão imparcial da conformidade e da postura de segurança de uma organização." },
-            { domain: 5, question: "Uma análise de risco que utiliza categorias como 'Baixo', 'Médio' e 'Alto' para avaliar o impacto, em vez de valores monetários, é um exemplo de que tipo de análise?", options: ["Quantitativa", "Estatística", "Qualitativa", "Comparativa"], answer: "Qualitativa", explanation: "A análise de risco qualitativa usa classificações descritivas (como Baixo, Médio, Alto) para avaliar riscos, sendo mais subjetiva que a análise quantitativa, que usa valores numéricos e monetários." },
+            // Domínio 5: Gestão de Programas de Segurança e Supervisão (15 questões)
+            { domain: 5, question: "Qual estratégia de tratamento de risco uma empresa aplica ao decidir não implementar controles para um risco de alto impacto e baixa probabilidade devido ao custo?", options: ["Mitigação", "Transferência", "Aceitação", "Evitação"], answer: "Aceitação", explanation: "A aceitação do risco é a decisão consciente de assumir um risco, geralmente porque o custo de mitigá-lo é maior do que o risco potencial." },
+            { domain: 5, question: "Qual é o PRINCIPAL objetivo de uma auditoria de segurança externa?", options: ["Treinar a equipe interna.", "Fornecer uma avaliação objetiva e imparcial.", "Vender produtos.", "Substituir o monitoramento contínuo."], answer: "Fornecer uma avaliação objetiva e imparcial.", explanation: "Auditores externos fornecem uma visão imparcial da conformidade e da postura de segurança de uma organização." },
+            { domain: 5, question: "Uma análise de risco que utiliza categorias como 'Baixo', 'Médio' e 'Alto' é um exemplo de que tipo de análise?", options: ["Quantitativa", "Estatística", "Qualitativa", "Comparativa"], answer: "Qualitativa", explanation: "A análise de risco qualitativa usa classificações descritivas para avaliar riscos, sendo mais subjetiva que a análise quantitativa." },
+            { domain: 5, question: "Qual documento de governança fornece diretrizes detalhadas e passo a passo para realizar uma tarefa específica?", options: ["Política", "Padrão", "Diretriz", "Procedimento"], answer: "Procedimento", explanation: "Procedimentos são documentos obrigatórios que detalham as etapas exatas para realizar uma tarefa específica, garantindo consistência." },
+            { domain: 5, question: "Qual é o principal objetivo de um programa de conscientização de segurança?", options: ["Ensinar todos a programar com segurança.", "Ensinar funcionários a configurar firewalls.", "Reduzir o risco causado por erro humano.", "Atender a um requisito de auditoria."], answer: "Reduzir o risco causado por erro humano.", explanation: "O objetivo é transformar os funcionários de um elo fraco em uma linha de defesa, ensinando-os a reconhecer ameaças e seguir práticas seguras." },
+            { domain: 5, question: "Qual métrica de recuperação de desastres define o tempo máximo que uma aplicação pode ficar indisponível após uma falha?", options: ["RTO (Recovery Time Objective)", "RPO (Recovery Point Objective)", "MTTR", "MTBF"], answer: "RTO (Recovery Time Objective)", explanation: "O RTO é o tempo alvo para restaurar uma função de negócio após um desastre. O RPO, por outro lado, define a quantidade máxima de perda de dados que é aceitável." },
+            { domain: 5, question: "No gerenciamento de riscos, o que significa 'transferência de risco'?", options: ["Eliminar o risco.", "Reduzir o risco.", "Aceitar o risco.", "Mover a responsabilidade financeira do risco para um terceiro."], answer: "Mover a responsabilidade financeira do risco para um terceiro.", explanation: "A transferência de risco não elimina o risco, mas transfere o impacto financeiro para outra entidade. O exemplo mais comum é a compra de um seguro." },
+            { domain: 5, question: "Uma 'Business Impact Analysis' (BIA) é realizada para determinar o quê?", options: ["Vulnerabilidades na rede.", "Probabilidade de uma ameaça.", "Os efeitos de uma interrupção nas funções críticas do negócio.", "O custo de um novo controle."], answer: "Os efeitos de uma interrupção nas funções críticas do negócio.", explanation: "O principal objetivo de uma BIA é identificar as funções críticas do negócio e determinar o impacto que uma interrupção teria sobre elas." },
+            { domain: 5, question: "Qual função em uma estrutura de governança de dados é tipicamente responsável pela qualidade e precisão de um conjunto de dados específico?", options: ["Data Owner", "Data Steward", "Data Custodian", "Data Processor"], answer: "Data Steward", explanation: "O Data Steward é responsável pela gestão do dia a dia de um ativo de dados, incluindo sua qualidade e aderência às políticas, agindo em nome do Data Owner." },
+            { domain: 5, question: "Qual a diferença fundamental entre um teste de penetração (pen test) e uma varredura de vulnerabilidades?", options: ["Uma varredura é automatizada, um pen test é manual.", "Uma varredura identifica vulnerabilidades, um pen test tenta explorá-las.", "Uma varredura é externa, um pen test é interno.", "Uma varredura é mais cara."], answer: "Uma varredura identifica vulnerabilidades, um pen test tenta explorá-las.", explanation: "Uma varredura de vulnerabilidades lista potenciais fraquezas. Um teste de penetração é uma simulação de ataque mais profunda, onde um especialista tenta ativamente explorar essas vulnerabilidades." },
+            { domain: 5, question: "Uma organização que processa, armazena ou transmite informações de cartão de crédito deve estar em conformidade com qual padrão de segurança?", options: ["HIPAA", "SOX", "GDPR", "PCI DSS"], answer: "PCI DSS", explanation: "O PCI DSS (Payment Card Industry Data Security Standard) é um conjunto de requisitos de segurança projetado para garantir que todas as empresas que processam informações de cartão de crédito mantenham um ambiente seguro." },
+            { domain: 5, question: "No cálculo de risco quantitativo, o que representa a 'Expectativa de Perda Anual' (Annualized Loss Expectancy - ALE)?", options: ["O custo total de um único incidente.", "O número de vezes que um incidente ocorre por ano.", "O custo total esperado de um risco ao longo de um ano.", "O custo de implementação de um controle de segurança."], answer: "O custo total esperado de um risco ao longo de um ano.", explanation: "A ALE é calculada multiplicando a Expectativa de Perda Única (SLE), que é o custo de um único incidente, pela Taxa de Ocorrência Anual (ARO), que é a frequência com que o incidente ocorre por ano (ALE = SLE * ARO)." },
+            { domain: 5, question: "Qual documento de governança de segurança é de alto nível, define o escopo do programa de segurança e tem o endosso da alta administração?", options: ["Padrão", "Procedimento", "Diretriz", "Política"], answer: "Política", explanation: "A política de segurança é o documento mais alto na hierarquia de governança. É ampla, declara as intenções e objetivos da organização em relação à segurança e é obrigatória para todos os funcionários." },
+            { domain:5, question: "Um analista de segurança está revisando um contrato com um novo fornecedor de SaaS. Qual é o documento MAIS importante a ser analisado para entender as responsabilidades de segurança do fornecedor e as garantias de nível de serviço?", options: ["Acordo de Nível de Serviço (SLA)", "Política de Uso Aceitável (AUP)", "Acordo de Não Divulgação (NDA)", "Plano de negócios do fornecedor"], answer: "Acordo de Nível de Serviço (SLA)", explanation: "Um SLA é um contrato que define o nível de serviço esperado de um fornecedor, estabelecendo métricas como tempo de atividade (disponibilidade), responsabilidades de segurança, tempos de resposta e penalidades por não cumprimento." },
+            { domain: 5, question: "Qual é a principal motivação por trás do princípio da 'separação de funções' (separation of duties)?", options: ["Garantir que todos os funcionários sejam treinados em múltiplas tarefas.", "Aumentar a eficiência, permitindo que uma pessoa execute todas as etapas de um processo.", "Prevenir fraudes e erros, garantindo que nenhuma pessoa tenha controle total sobre um processo crítico.", "Simplificar as auditorias de segurança."], answer: "Prevenir fraudes e erros, garantindo que nenhuma pessoa tenha controle total sobre um processo crítico.", explanation: "A separação de funções é um controle interno projetado para dividir as tarefas e responsabilidades relacionadas a uma função ou processo de negócio sensível entre diferentes indivíduos, impedindo que uma única pessoa possa comprometer o processo." }
         ];
 
         // --- VARIÁVEIS DE ESTADO ---
@@ -156,6 +223,17 @@
         const scoreText = document.getElementById('score-text');
         const resultMessage = document.getElementById('result-message');
         
+        // --- FUNÇÕES UTILITÁRIAS ---
+        function shuffle(array) {
+            let currentIndex = array.length,  randomIndex;
+            while (currentIndex > 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
         // --- FUNÇÕES DE NAVEGAÇÃO E INICIALIZAÇÃO ---
         function showScreen(screenName) {
             [homeScreen, quizScreen, resultsScreen, historyScreen].forEach(s => s.classList.add('hidden'));
@@ -185,26 +263,25 @@
         // --- FUNÇÕES DE GERENCIAMENTO DO QUIZ ---
         function startQuiz(domainId) {
             currentQuizType = `Domínio ${domainId}`;
-            currentQuestions = questions.filter(q => q.domain === domainId);
+            const filteredQuestions = questions.filter(q => q.domain === domainId);
+            currentQuestions = shuffle([...filteredQuestions]);
             startQuizFlow();
         }
         
         function startFullExam() {
             currentQuizType = 'Exame Completo';
             const TOTAL_QUESTIONS = 25;
-            const distribution = { 1: 3, 2: 6, 3: 4, 4: 7, 5: 5 }; // ~%
+            // Distribuição ajustada para refletir pesos do exame
+            const distribution = { 1: 3, 2: 6, 3: 4, 4: 7, 5: 5 }; 
             
-            currentQuestions = [];
+            let examQuestions = [];
             for (const domainId in distribution) {
-                const domainQuestions = questions.filter(q => q.domain == domainId);
-                // Shuffle and pick
-                for(let i = domainQuestions.length - 1; i > 0; i--){
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [domainQuestions[i], domainQuestions[j]] = [domainQuestions[j], domainQuestions[i]];
-                }
-                currentQuestions.push(...domainQuestions.slice(0, distribution[domainId]));
+                const domainQuestions = shuffle([...questions.filter(q => q.domain == domainId)]);
+                examQuestions.push(...domainQuestions.slice(0, distribution[domainId]));
             }
-            startQuizFlow(1800); // 30 minutos = 1800 segundos
+            
+            currentQuestions = shuffle(examQuestions);
+            startQuizFlow(1800); // 30 minutos
         }
 
         function startQuizFlow(durationInSeconds = 0) {
@@ -224,7 +301,7 @@
         }
 
         function displayQuestion() {
-            stopTimer(false); // Pausa o timer enquanto responde
+            stopTimer(false); // Pausa o timer
             answerSubmitted = false;
             feedbackContainer.classList.add('hidden');
             const question = currentQuestions[currentQuestionIndex];
@@ -282,21 +359,21 @@
             }
 
             if (selectedOptions.length === 0) {
-                // Não usar alert. Pode-se adicionar uma mensagem na tela se desejar.
                 return;
             }
             
             answerSubmitted = true;
             let isCorrect = false;
             if (question.isMultiSelect) {
-                isCorrect = selectedOptions.length === question.correctAnswers.length && selectedOptions.every(opt => question.correctAnswers.includes(opt));
+                const correctSet = new Set(question.correctAnswers);
+                const selectedSet = new Set(selectedOptions);
+                isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(item => selectedSet.has(item));
             } else {
                 isCorrect = selectedOptions[0] === question.answer;
             }
 
             if (isCorrect) score++;
             
-            // Feedback visual
             optionsContainer.querySelectorAll('label').forEach(label => {
                 const input = label.querySelector('input');
                 const isCorrectAnswer = question.isMultiSelect ? question.correctAnswers.includes(input.value) : question.answer === input.value;
@@ -324,7 +401,7 @@
         function showResults() {
             stopTimer();
             progressBarInner.style.width = `100%`;
-            showScreen('results');
+            showScreen('results-container');
             
             const total = currentQuestions.length;
             scoreText.textContent = `Você acertou ${score} de ${total} perguntas. (${Math.round((score/total)*100)}%)`;
@@ -341,7 +418,7 @@
             if (durationInSeconds <= 0) return;
             if (!resume) timeLeft = durationInSeconds;
             
-            stopTimer(); // Garante que não haja timers duplicados
+            stopTimer(); 
             timerInterval = setInterval(() => {
                 timeLeft--;
                 const minutes = Math.floor(timeLeft / 60);
@@ -350,7 +427,6 @@
                 
                 if (timeLeft <= 0) {
                     stopTimer();
-                    alert("O tempo acabou!");
                     showResults();
                 }
             }, 1000);
@@ -363,37 +439,47 @@
 
         // --- FUNÇÕES DE HISTÓRICO ---
         function saveResult(type, currentScore, total, date) {
-            const results = JSON.parse(localStorage.getItem('comptiaSimResults') || '[]');
-            results.unshift({ type, score: currentScore, total, date: date.toISOString() });
-            localStorage.setItem('comptiaSimResults', JSON.stringify(results.slice(0, 50))); // Limita a 50 registros
+            try {
+                const results = JSON.parse(localStorage.getItem('comptiaSimResults') || '[]');
+                results.unshift({ type, score: currentScore, total, date: date.toISOString() });
+                localStorage.setItem('comptiaSimResults', JSON.stringify(results.slice(0, 50))); 
+            } catch(e) {
+                console.error("Não foi possível salvar o resultado:", e);
+            }
         }
         
         function displayHistory() {
-            const results = JSON.parse(localStorage.getItem('comptiaSimResults') || '[]');
-            const historyList = document.getElementById('history-list');
-            historyList.innerHTML = '';
-            
-            if (results.length === 0) {
-                historyList.innerHTML = '<p class="text-gray-400 text-center">Nenhum resultado encontrado. Complete um simulado para ver seu progresso!</p>';
-                return;
+            try {
+                const results = JSON.parse(localStorage.getItem('comptiaSimResults') || '[]');
+                const historyList = document.getElementById('history-list');
+                historyList.innerHTML = '';
+                
+                if (results.length === 0) {
+                    historyList.innerHTML = '<p class="text-gray-400 text-center">Nenhum resultado encontrado. Complete um simulado para ver seu progresso!</p>';
+                    showScreen('history-container');
+                    return;
+                }
+
+                results.forEach(res => {
+                    const percentage = Math.round((res.score / res.total) * 100);
+                    const colorClass = percentage >= 80 ? 'text-green-400' : percentage >= 50 ? 'text-yellow-400' : 'text-red-400';
+                    const date = new Date(res.date).toLocaleString('pt-BR');
+
+                    const item = document.createElement('div');
+                    item.className = 'bg-gray-700 p-4 rounded-lg flex justify-between items-center';
+                    item.innerHTML = `
+                        <div>
+                            <p class="font-bold text-white">${res.type}</p>
+                            <p class="text-sm text-gray-400">${date}</p>
+                        </div>
+                        <p class="text-xl font-bold ${colorClass}">${percentage}%</p>
+                    `;
+                    historyList.appendChild(item);
+                });
+            } catch(e) {
+                console.error("Não foi possível carregar o histórico:", e);
+                document.getElementById('history-list').innerHTML = '<p class="text-red-400 text-center">Ocorreu um erro ao carregar o histórico.</p>';
             }
-
-            results.forEach(res => {
-                const percentage = Math.round((res.score / res.total) * 100);
-                const colorClass = percentage >= 80 ? 'text-green-400' : percentage >= 50 ? 'text-yellow-400' : 'text-red-400';
-                const date = new Date(res.date).toLocaleString('pt-BR');
-
-                const item = document.createElement('div');
-                item.className = 'bg-gray-700 p-4 rounded-lg flex justify-between items-center';
-                item.innerHTML = `
-                    <div>
-                        <p class="font-bold text-white">${res.type}</p>
-                        <p class="text-sm text-gray-400">${date}</p>
-                    </div>
-                    <p class="text-xl font-bold ${colorClass}">${percentage}%</p>
-                `;
-                historyList.appendChild(item);
-            });
             showScreen('history-container');
         }
 
